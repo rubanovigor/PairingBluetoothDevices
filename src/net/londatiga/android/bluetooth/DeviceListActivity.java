@@ -8,12 +8,11 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -41,6 +40,14 @@ public class DeviceListActivity extends Activity {
 		mAdapter		= new DeviceListAdapter(this);
 		
 		mAdapter.setData(mDeviceList);
+		
+		/*mScanBtn.setOnClickListener(new View.OnClickListener() {				
+			@Override
+			public void onClick(View arg0) {
+				//mBluetoothAdapter.startDiscovery();
+			}
+		});*/
+		
 		mAdapter.setListener(new DeviceListAdapter.OnPairButtonClickListener() {			
 			@Override
 			public void onPairButtonClick(int position) {
@@ -56,11 +63,41 @@ public class DeviceListActivity extends Activity {
 			}
 		});
 		
+		/*mAdapter.setListener(new DeviceListAdapter.OnPairButtonClickListener() {			
+			@Override
+			public void onPairButtonClick(int position) {
+				BluetoothDevice device = mDeviceList.get(position);
+				
+				if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
+					unpairDevice(device);
+				} else {
+					showToast("Pairing...");
+					
+					pairDevice(device);
+				}
+			}
+		});*/
+		
 		mListView.setAdapter(mAdapter);
 		
 		registerReceiver(mPairReceiver, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED)); 
 	}
 	
+    // start game1
+    public void start_v_eeg_f1(View view) {
+			showToast("SINGULARITY!!!!...");   	
+			BluetoothDevice device = mDeviceList.get(0);			
+			if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
+				unpairDevice(device);
+			} else {
+				showToast("Pairing...");
+				
+				pairDevice(device);
+			}
+			
+    }
+	
+    
 	@Override
 	public void onDestroy() {
 		unregisterReceiver(mPairReceiver);
